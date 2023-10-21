@@ -1,0 +1,65 @@
+#include <iostream>
+#include <vector>
+#include <string>
+#include <ctime>
+
+struct Post {
+    std::string username;
+    std::string content;
+    std::time_t timestamp;
+
+    Post(const std::string& u, const std::string& c) : username(u), content(c), timestamp(std::time(nullptr)) {}
+};
+
+class SocialMediaPlatform {
+private:
+    std::vector<Post> posts;
+
+public:
+    void createPost(const std::string& username, const std::string& content) {
+        Post newPost(username, content);
+        posts.push_back(newPost);
+        std::cout << "Post created by " << username << std::endl;
+    }
+
+    void displayPosts() {
+        if (posts.empty()) {
+            std::cout << "No posts to display." << std::endl;
+            return;
+        }
+
+        std::cout << "Recent Posts:" << std::endl;
+        for (const Post& post : posts) {
+            std::cout << post.username << " (" << std::ctime(&post.timestamp) << "): " << post.content << std::endl;
+        }
+    }
+};
+
+int main() {
+    SocialMediaPlatform platform;
+    std::string username, content;
+
+    while (true) {
+        std::cout << "Enter your username (or 'q' to quit): ";
+        std::cin >> username;
+
+        if (username == "q") {
+            break;
+        }
+
+        std::cin.ignore(); // Clear the newline character in the input buffer.
+
+        std::cout << "Write your post (or 'q' to quit): ";
+        std::getline(std::cin, content);
+
+        if (content == "q") {
+            break;
+        }
+
+        platform.createPost(username, content);
+    }
+
+    platform.displayPosts();
+
+    return 0;
+}
